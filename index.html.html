@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Interaktif — Lembaga Keuangan Bukan Bank | Kelas 9</title>
+<style>
+:root{
+  --primary:#4f46e5;
+  --primary-dark:#4338ca;
+  --accent:#06b6d4;
+  --green:#10b981;
+  --red:#ef4444;
+  --amber:#f59e0b;
+  --text:#1e293b;
+  --muted:#64748b;
+  --line:#e2e8f0;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  background:linear-gradient(160deg,#0f172a 0%,#1e1b4b 45%,#312e81 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+  color:var(--text);
+  padding:24px 14px 70px;
+  display:flex;
+  justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+.app{width:100%;max-width:840px;}
+.screen{display:none;animation:fade .35s ease;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+/* ---------- HOME ---------- */
+.hero{text-align:center;color:#fff;padding:26px 10px 10px;}
+.badge{
+  display:inline-block;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  color:#c7d2fe;font-size:12.5px;font-weight:600;letter-spacing:.5px;
+  padding:7px 16px;border-radius:999px;margin-bottom:18px;
+  backdrop-filter:blur(6px);
+}
+.hero h1{
+  font-size:clamp(26px,5vw,40px);line-height:1.18;margin:0 0 14px;font-weight:800;
+}
+.hero h1 span{
+  background:linear-gradient(90deg,#67e8f9,#a5b4fc,#f0abfc);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{color:#cbd5e1;font-size:15.5px;line-height:1.7;max-width:600px;margin:0 auto;}
+
+.info-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;margin:28px 0 22px;
+}
+.info-card{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:18px;text-align:center;color:#e2e8f0;
+  backdrop-filter:blur(8px);
+}
+.info-card .ic{font-size:26px;margin-bottom:8px;}
+.info-card h3{margin:0 0 6px;font-size:15px;color:#fff;}
+.info-card p{margin:0;font-size:13px;color:#a5b4fc;line-height:1.5;}
+
+/* ---------- IDENTITAS SISWA ---------- */
+.identity-box{
+  background:#fff;border-radius:20px;padding:22px;margin-bottom:18px;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.55);
+}
+.identity-box h3{margin:0 0 14px;font-size:16px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.identity-field{margin-bottom:12px;}
+.identity-field label{
+  display:block;font-size:13px;font-weight:700;color:var(--muted);
+  margin-bottom:6px;letter-spacing:.3px;
+}
+.identity-field input{
+  width:100%;padding:14px 16px;border:2px solid var(--line);border-radius:12px;
+  font-family:inherit;font-size:15.5px;outline:none;transition:.2s;background:#f8fafc;
+  color:var(--text);
+}
+.identity-field input:focus{
+  border-color:var(--primary);background:#fff;
+  box-shadow:0 0 0 4px rgba(79,70,229,.12);
+}
+.identity-field input.err{
+  border-color:var(--red);background:#fef2f2;
+  animation:shk .4s;
+}
+.identity-hint{
+  font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.55;
+}
+
+.mode-box{
+  background:#fff;border-radius:20px;padding:22px;margin-bottom:18px;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.55);
+}
+.mode-box h3{margin:0 0 14px;font-size:16px;color:var(--text);}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:560px){.mode-grid{grid-template-columns:1fr;}}
+.mode-opt{
+  border:2px solid var(--line);border-radius:14px;padding:14px 15px;cursor:pointer;
+  transition:.2s;display:flex;gap:12px;align-items:flex-start;background:#f8fafc;
+}
+.mode-opt:hover{border-color:#c7d2fe;background:#f5f3ff;}
+.mode-opt.sel{border-color:var(--primary);background:#eef2ff;box-shadow:0 0 0 4px rgba(79,70,229,.12);}
+.mode-opt .emo{font-size:22px;line-height:1;}
+.mode-opt b{display:block;font-size:14.5px;margin-bottom:3px;}
+.mode-opt small{color:var(--muted);font-size:12.5px;line-height:1.45;display:block;}
+
+.btn{
+  border:none;border-radius:14px;font-family:inherit;font-size:15.5px;font-weight:700;
+  padding:15px 26px;cursor:pointer;transition:.2s;width:100%;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;
+  box-shadow:0 12px 26px -10px rgba(79,70,229,.85);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(79,70,229,.95);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-ghost{
+  background:#fff;color:var(--primary);border:2px solid var(--line);margin-top:10px;
+}
+.btn-ghost:hover{border-color:var(--primary);background:#f5f3ff;}
+
+/* ---------- QUIZ ---------- */
+.quiz-head{margin-bottom:16px;color:#fff;}
+.quiz-meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:9px;color:#c7d2fe;}
+.quiz-meta b{color:#fff;}
+.progress-track{
+  height:9px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,#22d3ee,#818cf8);transition:width .4s ease;
+}
+.card{
+  background:#fff;border-radius:20px;padding:24px;
+  box-shadow:0 22px 48px -22px rgba(0,0,0,.6);
+}
+.q-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.tag{
+  font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px;letter-spacing:.3px;
+}
+.tag-topic{background:#eef2ff;color:#4338ca;}
+.tag-type{background:#ecfeff;color:#0e7490;}
+#questionText{font-size:17.5px;line-height:1.6;margin:0 0 20px;font-weight:700;color:#0f172a;}
+
+.answer-area{display:flex;flex-direction:column;gap:10px;}
+.opt{
+  display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;
+  background:#f8fafc;border:2px solid var(--line);border-radius:14px;
+  padding:13px 15px;cursor:pointer;font-family:inherit;font-size:15px;color:var(--text);
+  transition:.18s;line-height:1.5;
+}
+.opt:hover:not(.locked){border-color:#a5b4fc;background:#f5f3ff;transform:translateX(3px);}
+.opt .letter{
+  flex:0 0 27px;height:27px;border-radius:8px;background:#e2e8f0;color:#475569;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+  transition:.18s;
+}
+.opt.selected{border-color:var(--primary);background:#eef2ff;}
+.opt.selected .letter{background:var(--primary);color:#fff;}
+.opt.correct{border-color:var(--green);background:#ecfdf5;}
+.opt.correct .letter{background:var(--green);color:#fff;}
+.opt.wrong{border-color:var(--red);background:#fef2f2;}
+.opt.wrong .letter{background:var(--red);color:#fff;}
+.opt.locked{cursor:default;}
+
+.short-input{
+  width:100%;padding:15px 16px;border:2px solid var(--line);border-radius:14px;
+  font-family:inherit;font-size:16px;outline:none;transition:.2s;background:#f8fafc;
+}
+.short-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(79,70,229,.12);}
+.short-input.ok{border-color:var(--green);background:#ecfdf5;color:#065f46;font-weight:700;}
+.short-input.no{border-color:var(--red);background:#fef2f2;color:#991b1b;font-weight:700;}
+.shake{animation:shk .4s;}
+@keyframes shk{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+
+.feedback{
+  margin-top:18px;border-radius:14px;padding:0 16px;max-height:0;overflow:hidden;
+  opacity:0;transition:.35s;font-size:14.5px;line-height:1.65;
+}
+.feedback.show{max-height:600px;padding:16px;opacity:1;margin-top:18px;}
+.feedback.good{background:#ecfdf5;border-left:5px solid var(--green);}
+.feedback.bad{background:#fef2f2;border-left:5px solid var(--red);}
+.fb-head{font-weight:800;font-size:15px;margin-bottom:8px;}
+.feedback.good .fb-head{color:#047857;}
+.feedback.bad .fb-head{color:#b91c1c;}
+.fb-answer{background:#fff;border-radius:9px;padding:9px 12px;margin-bottom:9px;color:#0f172a;}
+.fb-body{color:#334155;}
+
+.actions{margin-top:20px;}
+
+/* ---------- RESULT ---------- */
+.result-card{
+  background:#fff;border-radius:22px;padding:28px;margin-bottom:16px;
+  box-shadow:0 22px 48px -22px rgba(0,0,0,.6);
+}
+.res-head{text-align:center;}
+.score-circle{
+  width:158px;height:158px;border-radius:50%;margin:6px auto 18px;
+  background:conic-gradient(var(--clr) calc(var(--p)*1%), #e2e8f0 0);
+  display:flex;align-items:center;justify-content:center;
+  transition:.6s;
+}
+.score-inner{
+  width:124px;height:124px;border-radius:50%;background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.score-num{font-size:42px;font-weight:900;line-height:1;color:#0f172a;}
+.score-label{font-size:10.5px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-top:4px;}
+.res-title{font-size:22px;font-weight:800;margin:0 0 8px;}
+.res-sub{color:var(--muted);font-size:14.5px;margin:0 0 18px;line-height:1.6;}
+.status-pill{
+  display:inline-block;padding:9px 20px;border-radius:999px;font-weight:800;font-size:13.5px;
+  letter-spacing:.4px;
+}
+.pill-pass{background:#ecfdf5;color:#047857;border:2px solid #a7f3d0;}
+.pill-fail{background:#fff7ed;color:#c2410c;border:2px solid #fed7aa;}
+
+.identity-result{
+  background:#f1f5f9;border-radius:12px;padding:12px 16px;margin-top:16px;
+  display:flex;justify-content:space-around;gap:12px;font-size:13.5px;flex-wrap:wrap;
+}
+.identity-result div{text-align:center;}
+.identity-result b{display:block;color:#0f172a;font-size:14px;margin-bottom:3px;}
+.identity-result span{color:#64748b;font-size:11.5px;font-weight:600;letter-spacing:.3px;}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
+.stat{background:#f8fafc;border-radius:14px;padding:13px;text-align:center;border:1px solid var(--line);}
+.stat b{display:block;font-size:21px;font-weight:900;color:#0f172a;}
+.stat span{font-size:11.5px;color:var(--muted);font-weight:600;}
+
+.section-h{
+  font-size:16.5px;font-weight:800;margin:0 0 14px;display:flex;align-items:center;gap:9px;
+}
+.topic-list{display:flex;flex-direction:column;gap:9px;}
+.topic-row{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;
+  background:#f8fafc;border:1px solid var(--line);font-size:14px;
+}
+.topic-row .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px;}
+.dot-ok{background:var(--green);}
+.dot-no{background:var(--red);}
+.topic-row .nm{flex:1;font-weight:600;}
+.topic-row .sc{font-weight:800;font-size:13px;color:var(--muted);}
+
+.material-box{
+  background:#eef2ff;border-left:5px solid var(--primary);border-radius:12px;
+  padding:14px 16px;margin-top:11px;font-size:14px;line-height:1.68;color:#312e81;
+}
+.material-box b{display:block;margin-bottom:5px;color:#3730a3;font-size:14px;}
+
+.enrich-list{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:11px;}
+.enrich-list li{
+  background:#f0fdfa;border-left:5px solid var(--accent);border-radius:12px;
+  padding:13px 16px;font-size:14px;line-height:1.62;color:#134e4a;
+}
+.enrich-list li b{color:#0f766e;}
+
+.review-list{display:flex;flex-direction:column;gap:9px;}
+.rev{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;}
+.rev summary{
+  padding:13px 16px;cursor:pointer;font-size:14px;font-weight:600;list-style:none;
+  display:flex;gap:11px;align-items:flex-start;line-height:1.5;
+}
+.rev summary::-webkit-details-marker{display:none;}
+.rev summary .mk{
+  flex:0 0 22px;height:22px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:12px;color:#fff;font-weight:800;
+}
+.mk-ok{background:var(--green);}
+.mk-no{background:var(--red);}
+.rev[open] summary{background:#f8fafc;border-bottom:1px solid var(--line);}
+.rev-body{padding:14px 16px;font-size:13.5px;line-height:1.68;color:#334155;}
+.rev-line{margin-bottom:7px;}
+.rev-line b{color:#0f172a;}
+.chip-ok{color:#047857;font-weight:700;}
+.chip-no{color:#b91c1c;font-weight:700;}
+
+.footer-note{text-align:center;color:#94a3b8;font-size:12.5px;margin-top:26px;line-height:1.7;}
+
+/* ---------- STATUS KIRIM ---------- */
+.send-status{
+  text-align:center;font-size:12.5px;padding:10px 14px;border-radius:10px;
+  margin-top:14px;font-weight:600;
+}
+.send-ok{background:#ecfdf5;color:#047857;}
+.send-loading{background:#eff6ff;color:#1d4ed8;}
+.send-fail{background:#fef2f2;color:#b91c1c;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div class="badge">IPS • KELAS 9 • KURIKULUM MERDEKA</div>
+      <h1>Kuis Interaktif<br><span>Lembaga Keuangan Bukan Bank</span></h1>
+      <p>Uji pemahamanmu tentang asuransi, pegadaian, leasing, dana pensiun, pasar modal, dan lembaga pembiayaan lainnya melalui 25 soal interaktif dengan pembahasan lengkap.</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card"><div class="ic">📝</div><h3>25 Soal</h3><p>15 pilihan ganda, 5 benar–salah, 5 jawaban singkat</p></div>
+      <div class="info-card"><div class="ic">🎯</div><h3>KKM 82</h3><p>Nilai ≥ 82 masuk jalur pengayaan</p></div>
+      <div class="info-card"><div class="ic">💡</div><h3>Pembahasan</h3><p>Setiap soal dilengkapi penjelasan konsep</p></div>
+    </div>
+
+    <!-- ======== FORM IDENTITAS SISWA ======== -->
+    <div class="identity-box">
+      <h3>👤 Identitas Siswa</h3>
+      <div class="identity-field">
+        <label for="namaInput">Nama Lengkap</label>
+        <input type="text" id="namaInput" placeholder="Contoh: Fatul Kharina" autocomplete="off">
+      </div>
+      <div class="identity-field">
+        <label for="kelasInput">Kelas</label>
+        <input type="text" id="kelasInput" placeholder="Contoh: 9A" autocomplete="off">
+      </div>
+      <div class="identity-hint">💡 Data ini akan dikirim ke guru bersama hasil kuis kamu.</div>
+    </div>
+
+    <div class="mode-box">
+      <h3>⚙️ Pilih Mode Belajar</h3>
+      <div class="mode-grid">
+        <div class="mode-opt sel" data-mode="belajar">
+          <div class="emo">📖</div>
+          <div>
+            <b>Mode Belajar</b>
+            <small>Pembahasan muncul langsung setiap kali kamu menjawab. Cocok untuk memahami materi.</small>
+          </div>
+        </div>
+        <div class="mode-opt" data-mode="ujian">
+          <div class="emo">🔒</div>
+          <div>
+            <b>Mode Ujian</b>
+            <small>Tanpa pembahasan selama kuis. Pembahasan muncul di akhir. Cocok untuk mengukur kemampuan.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button id="startBtn" class="btn btn-primary">Mulai Kuis 🚀</button>
+    <div class="footer-note">Selamat belajar! Jawab dengan teliti dan jujur ya 💪</div>
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section id="quiz" class="screen">
+    <div class="quiz-head">
+      <div class="quiz-meta">
+        <span id="qCounter">Soal 1 / 25</span>
+        <span id="scoreLive">Skor: <b>0</b></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="q-meta">
+        <span class="tag tag-topic" id="topicBadge">Topik</span>
+        <span class="tag tag-type" id="typeBadge">Tipe</span>
+      </div>
+      <h2 id="questionText">Pertanyaan…</h2>
+      <div class="answer-area" id="answerArea"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="actions">
+        <button id="nextBtn" class="btn btn-primary" disabled>Selanjutnya →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="result" class="screen"></section>
+
+</div>
+
+<script>
+/* ============================================================
+   ⚠️ GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT ANDA
+   ============================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzmDU1_GhENoBLDnLwODaqkyfF_Gnn5DYSehvdhk3VzmfSzspIq5vxbqdn1fRweBXmC/exec';
+
+/* ============================================================
+   DATA SOAL
+   ============================================================ */
+const LETTERS = ['A','B','C','D'];
+const KKM = 82;
+
+const QUESTIONS = [
+  { type:'mc', topik:'Konsep LKBB',
+    q:'Lembaga Keuangan Bukan Bank (LKBB) adalah lembaga keuangan yang kegiatan utamanya…',
+    options:['Menghimpun dana masyarakat tanpa menerima simpanan giro','Menghimpun dana masyarakat dengan menerima simpanan giro','Menerbitkan uang kartal untuk kebutuhan masyarakat','Menyalurkan kredit hanya kepada pemerintah pusat'],
+    answer:0,
+    pembahasan:'LKBB menghimpun dana dari masyarakat lalu menyalurkannya kembali, tetapi tidak boleh menerima simpanan dalam bentuk giro, tabungan, maupun deposito seperti bank umum. LKBB juga tidak menciptakan uang giral dan tidak menerbitkan uang kartal.' },
+  { type:'mc', topik:'Jenis LKBB',
+    q:'Berikut ini yang termasuk Lembaga Keuangan Bukan Bank adalah…',
+    options:['Bank umum','Bank sentral','Pegadaian','Bank perkreditan rakyat'],
+    answer:2,
+    pembahasan:'Pegadaian adalah LKBB. Bank umum, bank sentral, dan bank perkreditan rakyat (BPR) semuanya termasuk lembaga perbankan, bukan LKBB.' },
+  { type:'mc', topik:'Asuransi',
+    q:'Dokumen yang menjadi bukti perjanjian antara nasabah (tertanggung) dengan perusahaan asuransi (penanggung) disebut…',
+    options:['Polis','Premi','Klaim','Rekening'],
+    answer:0,
+    pembahasan:'Polis adalah bukti perjanjian asuransi yang memuat hak dan kewajiban kedua belah pihak. Premi adalah uang yang dibayar nasabah, sedangkan klaim adalah permintaan ganti rugi.' },
+  { type:'mc', topik:'Asuransi',
+    q:'Sejumlah uang yang dibayarkan nasabah kepada perusahaan asuransi secara berkala sebagai bentuk kerja sama pertanggungan disebut…',
+    options:['Klaim','Premi','Dividen','Bunga'],
+    answer:1,
+    pembahasan:'Premi adalah kewajiban nasabah asuransi yang dibayar secara berkala (bulanan/tahunan). Sebagai imbalannya, nasabah berhak mengajukan klaim bila terjadi risiko yang diperjanjikan.' },
+  { type:'mc', topik:'Pegadaian',
+    q:'Lembaga keuangan yang memberikan pinjaman uang kepada masyarakat dengan jaminan barang bergerak adalah…',
+    options:['Koperasi simpan pinjam','Perusahaan leasing','Pegadaian','Dana pensiun'],
+    answer:2,
+    pembahasan:'Pegadaian memberikan kredit dengan jaminan barang bergerak seperti emas, elektronik, atau kendaraan. Bukti pinjamannya adalah Surat Bukti Kredit (SBK), dan biaya jasanya disebut sewa modal.' },
+  { type:'mc', topik:'Leasing & Pembiayaan',
+    q:'Kegiatan utama perusahaan leasing (sewa guna usaha) adalah…',
+    options:['Memberikan kredit dengan jaminan barang bergerak','Menyewakan barang modal dengan hak opsi','Menghimpun dana dalam bentuk deposito berjangka','Menerbitkan surat utang jangka panjang'],
+    answer:1,
+    pembahasan:'Leasing menyewakan barang modal (mesin, kendaraan operasional, alat berat) kepada perusahaan untuk jangka waktu tertentu. Di akhir periode, penyewa memiliki hak opsi untuk membeli barang tersebut.' },
+  { type:'mc', topik:'Dana Pensiun',
+    q:'Lembaga yang menghimpun iuran peserta selama masa kerja dan membayarkan manfaatnya ketika peserta memasuki masa pensiun adalah…',
+    options:['Asuransi','Dana pensiun','Pasar modal','Anjak piutang'],
+    answer:1,
+    pembahasan:'Dana pensiun mengelola iuran peserta selama masa kerja. Saat peserta pensiun, ia menerima manfaat pensiun secara berkala atau sekaligus sesuai perjanjian.' },
+  { type:'mc', topik:'Pasar Modal',
+    q:'Surat berharga yang menunjukkan bukti kepemilikan sebagian dari suatu perusahaan disebut…',
+    options:['Obligasi','Saham','Reksa dana','Sertifikat deposito'],
+    answer:1,
+    pembahasan:'Saham adalah bukti kepemilikan atas sebagian perusahaan. Pemegang saham berhak atas dividen dan ikut serta dalam Rapat Umum Pemegang Saham (RUPS).' },
+  { type:'mc', topik:'Pasar Modal',
+    q:'Surat berharga yang menunjukkan bahwa penerbitnya berutang kepada pemegangnya dengan imbalan bunga disebut…',
+    options:['Saham','Obligasi','Waran','Polis'],
+    answer:1,
+    pembahasan:'Obligasi adalah surat utang jangka panjang. Penerbit obligasi berkewajiban membayar bunga (kupon) secara berkala dan melunasi pokok utang pada saat jatuh tempo.' },
+  { type:'mc', topik:'Pasar Modal',
+    q:'Wadah yang digunakan untuk menghimpun dana masyarakat dan diinvestasikan ke dalam portofolio efek oleh manajer investasi disebut…',
+    options:['Reksa dana','Anjak piutang','Dana pensiun','Modal ventura'],
+    answer:0,
+    pembahasan:'Reksa dana cocok bagi investor pemula karena dana dikelola oleh manajer investasi profesional dan risikonya lebih terdiversifikasi dibanding membeli saham tunggal.' },
+  { type:'mc', topik:'Leasing & Pembiayaan',
+    q:'Lembaga keuangan yang membantu perusahaan mengalihkan risiko piutang dagang yang belum dibayar pelanggan disebut…',
+    options:['Modal ventura','Anjak piutang','Sewa guna usaha','Pegadaian'],
+    answer:1,
+    pembahasan:'Anjak piutang (factoring) adalah jasa pengalihan piutang dagang suatu perusahaan kepada lembaga keuangan. Perusahaan segera menerima uang tunai, sementara risiko penagihan beralih ke lembaga tersebut.' },
+  { type:'mc', topik:'Leasing & Pembiayaan',
+    q:'Lembaga yang memberikan pembiayaan jangka panjang kepada perusahaan yang mengalami kesulitan modal dengan ikut menanamkan saham pada perusahaan tersebut adalah…',
+    options:['Modal ventura','Anjak piutang','Koperasi simpan pinjam','Dana pensiun'],
+    answer:0,
+    pembahasan:'Modal ventura (venture capital) memberikan penyertaan modal pada perusahaan yang sedang berkembang atau bermasalah modal. Karena ikut memiliki saham, modal ventura juga berbagi keuntungan dan risiko.' },
+  { type:'mc', topik:'Konsep LKBB',
+    q:'Perbedaan utama antara bank dan LKBB terletak pada…',
+    options:['Bank milik pemerintah, sedangkan LKBB milik swasta','Bank boleh menerima giro, sedangkan LKBB tidak boleh','Bank hanya melayani perusahaan, sedangkan LKBB melayani perorangan','Bank diawasi OJK, sedangkan LKBB tidak diawasi OJK'],
+    answer:1,
+    pembahasan:'Ciri pembeda utamanya: bank boleh menghimpun dana dalam bentuk giro, tabungan, dan deposito serta menciptakan uang giral. LKBB tidak boleh melakukan hal tersebut. Baik bank maupun LKBB sama-sama diawasi OJK.' },
+  { type:'mc', topik:'Otoritas & Pengawasan',
+    q:'Lembaga independen yang berwenang mengatur dan mengawasi seluruh kegiatan sektor jasa keuangan di Indonesia adalah…',
+    options:['Bank Indonesia','Kementerian Keuangan','Otoritas Jasa Keuangan','Lembaga Penjamin Simpanan'],
+    answer:2,
+    pembahasan:'OJK mengatur dan mengawasi sektor jasa keuangan secara terpadu, meliputi perbankan, LKBB, dan pasar modal. Bank Indonesia fokus pada kebijakan moneter, sedangkan LPS menjamin simpanan nasabah bank.' },
+  { type:'mc', topik:'Asuransi',
+    q:'Manfaat utama memiliki asuransi pendidikan bagi keluarga adalah…',
+    options:['Memperoleh keuntungan dari kenaikan harga saham','Menjamin ketersediaan biaya pendidikan anak','Menghindari kewajiban membayar pajak penghasilan','Mendapat pinjaman tanpa jaminan dari bank'],
+    answer:1,
+    pembahasan:'Asuransi pendidikan membantu keluarga merencanakan dan menjamin ketersediaan dana pendidikan anak, sekaligus memberikan perlindungan bila terjadi risiko pada orang tua sebagai pencari nafkah.' },
+
+  { type:'tf', topik:'Konsep LKBB',
+    q:'LKBB dapat menghimpun dana langsung dari masyarakat dalam bentuk giro.',
+    answer:1,
+    pembahasan:'SALAH. Menghimpun dana dalam bentuk giro hanya boleh dilakukan oleh bank umum. LKBB tidak boleh menerima giro, tabungan, maupun deposito.' },
+  { type:'tf', topik:'Asuransi',
+    q:'Polis asuransi merupakan bukti perjanjian antara pihak tertanggung dan pihak penanggung.',
+    answer:0,
+    pembahasan:'BENAR. Polis memuat kesepakatan antara tertanggung (nasabah) dan penanggung (perusahaan asuransi), termasuk premi, manfaat, dan risiko yang dijamin.' },
+  { type:'tf', topik:'Pegadaian',
+    q:'Pegadaian hanya dapat menerima jaminan berupa kendaraan bermotor saja.',
+    answer:1,
+    pembahasan:'SALAH. Jaminan pegadaian berupa barang bergerak, misalnya emas, perhiasan, elektronik, barang rumah tangga, hingga kendaraan bermotor.' },
+  { type:'tf', topik:'Pasar Modal',
+    q:'Reksa dana adalah wadah untuk menghimpun dana masyarakat yang kemudian diinvestasikan ke dalam portofolio efek.',
+    answer:0,
+    pembahasan:'BENAR. Reksa dana menghimpun dana dari banyak investor, lalu dikelola oleh manajer investasi ke dalam portofolio efek seperti saham, obligasi, dan pasar uang.' },
+  { type:'tf', topik:'Dana Pensiun',
+    q:'Dana pensiun memberikan manfaat kepada peserta setelah peserta memasuki masa pensiun.',
+    answer:0,
+    pembahasan:'BENAR. Manfaat dana pensiun dibayarkan ketika peserta berhenti bekerja atau memasuki masa pensiun, sesuai peraturan yang berlaku.' },
+
+  { type:'short', topik:'Pegadaian',
+    q:'Lembaga keuangan bukan bank yang memberikan pinjaman uang dengan jaminan barang bergerak disebut …',
+    accepted:['pegadaian'], answerText:'Pegadaian',
+    pembahasan:'Pegadaian memberikan kredit dengan jaminan barang bergerak. Bukti pinjamannya adalah Surat Bukti Kredit (SBK) dan biaya jasanya disebut sewa modal.' },
+  { type:'short', topik:'Asuransi',
+    q:'Dokumen bukti perjanjian antara nasabah dengan perusahaan asuransi disebut …',
+    accepted:['polis'], answerText:'Polis',
+    pembahasan:'Polis asuransi memuat identitas pihak, objek yang diasuransikan, besarnya premi, manfaat, serta risiko yang ditanggung.' },
+  { type:'short', topik:'Leasing & Pembiayaan',
+    q:'Kegiatan perusahaan pembiayaan yang menyewakan barang modal kepada perusahaan lain dengan memberikan hak opsi disebut …',
+    accepted:['leasing','sewa guna usaha','sewa guna','multifinance'], answerText:'Leasing (sewa guna usaha)',
+    pembahasan:'Leasing atau sewa guna usaha menyewakan barang modal dengan hak opsi, yaitu hak penyewa untuk membeli barang tersebut di akhir masa sewa.' },
+  { type:'short', topik:'Otoritas & Pengawasan',
+    q:'Lembaga independen yang bertugas mengatur dan mengawasi seluruh sektor jasa keuangan di Indonesia adalah …',
+    accepted:['ojk','otoritas jasa keuangan'], answerText:'OJK (Otoritas Jasa Keuangan)',
+    pembahasan:'OJK mengawasi perbankan, LKBB, dan pasar modal secara terpadu agar industri jasa keuangan sehat, transparan, dan melindungi konsumen.' },
+  { type:'short', topik:'Pasar Modal',
+    q:'Surat berharga yang menjadi bukti kepemilikan seseorang atau lembaga atas suatu perusahaan disebut …',
+    accepted:['saham','stock','ekuitas'], answerText:'Saham',
+    pembahasan:'Saham adalah bukti kepemilikan atas perusahaan. Pemilik saham berhak atas dividen dan memiliki suara dalam Rapat Umum Pemegang Saham (RUPS).' }
+];
+
+const MATERI = {
+  'Konsep LKBB':'LKBB adalah badan usaha di bidang keuangan yang menghimpun dana dari masyarakat dan menyalurkannya kembali, tetapi TIDAK boleh menerima simpanan giro, tabungan, maupun deposito, serta tidak menciptakan uang giral. Ciri ini yang membedakannya dari bank.',
+  'Jenis LKBB':'Contoh LKBB: asuransi, pegadaian, dana pensiun, perusahaan leasing/pembiayaan, koperasi simpan pinjam, anjak piutang, modal ventura, dan pasar modal. Ingat: Bank Umum dan BPR termasuk BANK, bukan LKBB.',
+  'Asuransi':'Asuransi = perjanjian antara penanggung (perusahaan asuransi) dan tertanggung (nasabah). Nasabah membayar PREMI secara berkala; bila terjadi risiko, nasabah mengajukan KLAIM. Bukti perjanjiannya adalah POLIS.',
+  'Pegadaian':'Pegadaian memberi pinjaman (kredit) dengan jaminan barang bergerak: emas, perhiasan, elektronik, hingga kendaraan. Bukti pinjaman = Surat Bukti Kredit (SBK). Biaya jasa = sewa modal.',
+  'Leasing & Pembiayaan':'Leasing (sewa guna usaha) menyewakan barang modal dengan hak opsi. Anjak piutang (factoring) mengalihkan piutang dagang perusahaan. Modal ventura memberi penyertaan modal jangka panjang pada perusahaan yang kesulitan modal.',
+  'Dana Pensiun':'Dana pensiun menghimpun iuran peserta selama masa kerja, lalu membayarkan manfaat pensiun saat peserta pensiun atau berhenti bekerja.',
+  'Pasar Modal':'Pasar modal = tempat jual beli efek jangka panjang. SAHAM = bukti kepemilikan. OBLIGASI = surat utang berbunga. REKSA DANA = wadah menghimpun dana yang dikelola manajer investasi ke dalam portofolio efek.',
+  'Otoritas & Pengawasan':'OJK (Otoritas Jasa Keuangan) mengatur dan mengawasi seluruh sektor jasa keuangan: perbankan, LKBB, dan pasar modal. Bank Indonesia mengurus kebijakan moneter; LPS menjamin simpanan nasabah bank.'
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  mode:'belajar',
+  index:0,
+  score:0,
+  userAnswers:[],
+  results:[],
+  nama:'',
+  kelas:'',
+  startTime:0,
+  duration:0,
+  sent:false
+};
+let answered = false;
+let currentSelection = null;
+
+const $ = id => document.getElementById(id);
+const nextBtn = $('nextBtn');
+
+/* ============================================================
+   UTILITAS
+   ============================================================ */
+function normalize(s){
+  return String(s).toLowerCase()
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================
+   HOME
+   ============================================================ */
+document.querySelectorAll('.mode-opt').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-opt').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+    state.mode = el.dataset.mode;
+  });
+});
+
+// Validasi real-time menghapus tanda error saat siswa mengetik
+['namaInput','kelasInput'].forEach(id=>{
+  $(id).addEventListener('input',()=>$(id).classList.remove('err'));
+});
+
+$('startBtn').addEventListener('click',()=>{
+  const namaInp = $('namaInput');
+  const kelasInp = $('kelasInput');
+  const nama = namaInp.value.trim();
+  const kelas = kelasInp.value.trim();
+
+  // Validasi
+  let valid = true;
+  if(nama.length < 2){
+    namaInp.classList.add('err');
+    valid = false;
+  }
+  if(kelas.length < 1){
+    kelasInp.classList.add('err');
+    valid = false;
+  }
+  if(!valid){
+    setTimeout(()=>{ namaInp.classList.remove('err'); kelasInp.classList.remove('err'); }, 600);
+    return;
+  }
+
+  // Simpan identitas
+  state.nama = nama;
+  state.kelas = kelas;
+  state.index = 0;
+  state.score = 0;
+  state.userAnswers = [];
+  state.results = [];
+  state.sent = false;
+  state.startTime = Date.now();
+
+  showScreen('quiz');
+  renderQuestion();
+});
+
+/* ============================================================
+   RENDER SOAL
+   ============================================================ */
+function renderQuestion(){
+  const q = QUESTIONS[state.index];
+  const total = QUESTIONS.length;
+
+  answered = false;
+  currentSelection = null;
+
+  $('qCounter').textContent = `Soal ${state.index+1} / ${total}`;
+  $('scoreLive').innerHTML = state.mode === 'belajar'
+      ? `Skor: <b>${state.score}</b>`
+      : `🔒 Mode Ujian`;
+  $('progressFill').style.width = (state.index / total * 100) + '%';
+
+  $('topicBadge').textContent = q.topik;
+  $('typeBadge').textContent = q.type === 'mc' ? 'Pilihan Ganda'
+                            : q.type === 'tf' ? 'Benar / Salah'
+                            : 'Jawaban Singkat';
+  $('questionText').textContent = q.q;
+
+  const area = $('answerArea');
+  area.innerHTML = '';
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  if(q.type === 'short'){
+    area.innerHTML = `<input type="text" id="shortInput" class="short-input"
+        placeholder="Tulis jawabanmu di sini, lalu tekan Enter…"
+        autocomplete="off" spellcheck="false">`;
+    const inp = $('shortInput');
+    inp.addEventListener('input',()=>{ if(!answered) updateNextBtn(); });
+    inp.addEventListener('keydown',e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); onNextClick(); }
+    });
+    setTimeout(()=>inp.focus(),120);
+  } else {
+    const opts = q.type === 'tf' ? ['Benar','Salah'] : q.options;
+    opts.forEach((text,i)=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt';
+      const letter = q.type === 'tf' ? (i === 0 ? 'B' : 'S') : LETTERS[i];
+      btn.innerHTML = `<span class="letter">${letter}</span><span class="otext">${text}</span>`;
+      btn.addEventListener('click',()=>pickOption(i,btn));
+      area.appendChild(btn);
+    });
+  }
+
+  updateNextBtn();
+}
+
+/* ============================================================
+   PEMILIHAN JAWABAN
+   ============================================================ */
+function pickOption(i, btn){
+  if(answered) return;
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  btn.classList.add('selected');
+  currentSelection = i;
+  updateNextBtn();
+
+  if(state.mode === 'belajar'){
+    handleAnswer(i);
+  }
+}
+
+/* ============================================================
+   PROSES JAWABAN
+   ============================================================ */
+function handleAnswer(userAns){
+  if(answered) return;
+  answered = true;
+
+  const q = QUESTIONS[state.index];
+  let correct;
+
+  if(q.type === 'short'){
+    const n = normalize(userAns);
+    correct = q.accepted.some(a => n.includes(normalize(a)) && n.length > 0);
+  } else {
+    correct = Number(userAns) === q.answer;
+  }
+
+  state.userAnswers[state.index] = userAns;
+  state.results[state.index] = correct;
+  if(correct) state.score++;
+
+  if(q.type !== 'short'){
+    const opts = document.querySelectorAll('.opt');
+    opts.forEach((o,i)=>{
+      o.classList.add('locked');
+      o.classList.remove('selected');
+      if(i === q.answer) o.classList.add('correct');
+      if(i === Number(userAns) && !correct) o.classList.add('wrong');
+    });
+  } else {
+    const inp = $('shortInput');
+    if(inp){
+      inp.disabled = true;
+      inp.classList.add(correct ? 'ok' : 'no');
+    }
+  }
+
+  if(state.mode === 'belajar'){
+    const fb = $('feedback');
+    const correctText = q.type === 'short'
+        ? q.answerText
+        : q.type === 'tf'
+          ? (q.answer === 0 ? 'Benar' : 'Salah')
+          : LETTERS[q.answer] + '. ' + q.options[q.answer];
+
+    fb.className = 'feedback show ' + (correct ? 'good' : 'bad');
+    fb.innerHTML = `
+      <div class="fb-head">${correct ? '✅ Tepat sekali!' : '❌ Belum tepat'}</div>
+      ${correct ? '' : `<div class="fb-answer">Jawaban benar: <b>${correctText}</b></div>`}
+      <div class="fb-body">💡 <b>Pembahasan:</b> ${q.pembahasan}</div>
+    `;
+
+    $('progressFill').style.width = ((state.index+1)/QUESTIONS.length*100) + '%';
+    $('scoreLive').innerHTML = `Skor: <b>${state.score}</b>`;
+  }
+
+  updateNextBtn();
+}
+
+/* ============================================================
+   TOMBOL NAVIGASI
+   ============================================================ */
+function updateNextBtn(){
+  const q = QUESTIONS[state.index];
+  const last = state.index === QUESTIONS.length - 1;
+
+  if(answered){
+    nextBtn.disabled = false;
+    nextBtn.textContent = last ? 'Lihat Hasil 🎉' : 'Soal Berikutnya →';
+    return;
+  }
+
+  if(q.type === 'short'){
+    nextBtn.textContent = state.mode === 'belajar' ? 'Periksa Jawaban' : 'Selanjutnya →';
+    const inp = $('shortInput');
+    nextBtn.disabled = !inp || inp.value.trim().length === 0;
+  } else {
+    nextBtn.textContent = last ? 'Lihat Hasil 🎉' : 'Selanjutnya →';
+    nextBtn.disabled = currentSelection === null;
+  }
+}
+
+function onNextClick(){
+  const q = QUESTIONS[state.index];
+
+  if(!answered){
+    if(q.type === 'short'){
+      const inp = $('shortInput');
+      const val = inp.value.trim();
+      if(!val){
+        inp.classList.add('shake');
+        setTimeout(()=>inp.classList.remove('shake'),400);
+        inp.focus();
+        return;
+      }
+      handleAnswer(val);
+      if(state.mode === 'belajar') return;
+    } else if(currentSelection !== null){
+      handleAnswer(currentSelection);
+      if(state.mode === 'belajar') return;
+    } else {
+      return;
+    }
+  }
+  goNext();
+}
+
+function goNext(){
+  if(state.index < QUESTIONS.length - 1){
+    state.index++;
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+nextBtn.addEventListener('click', onNextClick);
+
+/* ============================================================
+   KIRIM DATA KE GOOGLE SHEETS
+   ============================================================ */
+function sendToSheet(nilai){
+  if(state.sent) return;
+  state.sent = true;
+
+  // Cek apakah URL sudah diganti
+  if(!SCRIPT_URL || SCRIPT_URL.includes('PASTE_URL')){
+    console.warn('⚠️ SCRIPT_URL belum diisi. Data tidak dikirim ke Sheets.');
+    return;
+  }
+
+  const payload = {
+    timestamp: new Date().toLocaleString('id-ID'),
+    nama: state.nama,
+    kelas: state.kelas,
+    nilai: nilai,
+    benar: state.score,
+    salah: QUESTIONS.length - state.score,
+    total: QUESTIONS.length,
+    waktu: state.duration,
+    mode: state.mode
+  };
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  })
+  .then(()=>{
+    const el = document.getElementById('sendStatus');
+    if(el){
+      el.className = 'send-status send-ok';
+      el.textContent = '✅ Nilai berhasil dikirim ke guru.';
+    }
+  })
+  .catch(err=>{
+    const el = document.getElementById('sendStatus');
+    if(el){
+      el.className = 'send-status send-fail';
+      el.textContent = '⚠️ Gagal mengirim nilai. Tunjukkan layar ini ke guru.';
+    }
+    console.error('Gagal kirim:', err);
+  });
+
+  // Fallback: tampilkan status loading dulu
+  const statusEl = document.getElementById('sendStatus');
+  if(statusEl){
+    statusEl.className = 'send-status send-loading';
+    statusEl.textContent = '📤 Mengirim nilai ke guru…';
+  }
+}
+
+/* ============================================================
+   HASIL AKHIR
+   ============================================================ */
+function showResult(){
+  const total = QUESTIONS.length;
+  const nilai = Math.round(state.score / total * 100);
+  const lulus = nilai >= KKM;
+  const salah = total - state.score;
+
+  // Hitung durasi
+  state.duration = Math.round((Date.now() - state.startTime) / 1000);
+
+  // Kirim ke Google Sheets
+  sendToSheet(nilai);
+
+  // Analisis per topik
+  const topikMap = {};
+  QUESTIONS.forEach((q,i)=>{
+    if(!topikMap[q.topik]) topikMap[q.topik] = {benar:0, total:0};
+    topikMap[q.topik].total++;
+    if(state.results[i]) topikMap[q.topik].benar++;
+  });
+
+  const topikRows = Object.keys(topikMap).map(t=>{
+    const d = topikMap[t];
+    const ok = d.benar === d.total;
+    return `<div class="topic-row">
+      <span class="dot ${ok?'dot-ok':'dot-no'}"></span>
+      <span class="nm">${t}</span>
+      <span class="sc">${d.benar}/${d.total}</span>
+    </div>`;
+  }).join('');
+
+  const weakTopics = Object.keys(topikMap).filter(t=>topikMap[t].benar < topikMap[t].total);
+  const materiBoxes = weakTopics.map(t=>`
+    <div class="material-box">
+      <b>📌 ${t}</b>${MATERI[t] || ''}
+    </div>`).join('');
+
+  const pengayaanHTML = `
+    <div class="result-card">
+      <h3 class="section-h">🎓 Jalur Pengayaan</h3>
+      <p style="color:#64748b;font-size:14px;line-height:1.65;margin-top:-4px;margin-bottom:16px;">
+        Kamu sudah menguasai materi LKBB dengan baik. Lanjutkan dengan tantangan berikut agar pemahamanmu semakin mendalam dan aplikatif.
+      </p>
+      <ul class="enrich-list">
+        <li><b>Studi Kasus Kuantitatif:</b> Bandingkan biaya pinjaman Rp3.000.000 selama 6 bulan di pegadaian (sewa modal) dengan koperasi simpan pinjam (bunga pinjaman). Buat tabel perbandingan dan simpulkan mana yang lebih ringan beserta alasannya.</li>
+        <li><b>Analisis Produk:</b> Ambil satu brosur/katalog produk asuransi (boleh dari internet). Identifikasi premi, manfaat, risiko yang ditanggung, serta pengecualian (eksklusi) klaim. Presentasikan dalam 1 halaman.</li>
+        <li><b>Infografis Kreatif:</b> Buat infografis "8 Jenis LKBB dan Fungsinya" menggunakan Canva atau kertas karton. Sertakan satu contoh nyata lembaga untuk setiap jenis.</li>
+        <li><b>Simulasi Investasi:</b> Misalkan kamu membeli 200 lembar saham PT Maju Jaya seharga Rp1.500/lembar. Jika harga naik menjadi Rp1.850/lembar dan dividen Rp50/lembar, hitunglah total keuntunganmu (capital gain + dividen) beserta persentase keuntungannya.</li>
+        <li><b>Debat Mini:</b> Diskusikan bersama teman: "Untuk pelajar, lebih baik menabung di bank, membeli emas di pegadaian, atau berinvestasi reksa dana?" Sertakan argumen berbasis risiko, imbal hasil, dan likuiditas.</li>
+        <li><b>Kunjungan/Eksplorasi Digital:</b> Kunjungi situs resmi OJK atau salah satu LKBB, lalu tuliskan 5 fakta menarik tentang produk atau layanan yang kamu temukan.</li>
+      </ul>
+    </div>`;
+
+  const penguasaanHTML = `
+    <div class="result-card">
+      <h3 class="section-h">📚 Jalur Penguasaan (Remedial)</h3>
+      <p style="color:#64748b;font-size:14px;line-height:1.65;margin-top:-4px;margin-bottom:16px;">
+        Nilaimu belum mencapai KKM ${KKM}. Jangan menyerah! Pelajari kembali ringkasan materi pada topik yang masih lemah di bawah ini, lalu ulangi kuisnya.
+      </p>
+      ${materiBoxes || '<div class="material-box"><b>📌 Semua Topik</b>Pelajari kembali seluruh materi LKBB secara menyeluruh, mulai dari konsep, jenis, hingga lembaga pengawasnya.</div>'}
+      <button class="btn btn-ghost" id="backHome2" style="margin-top:18px;">Kembali ke Beranda</button>
+    </div>`;
+
+  const reviewHTML = QUESTIONS.map((q,i)=>{
+    const ok = state.results[i];
+    const ua = state.userAnswers[i];
+
+    const dispUser = (ua === undefined || ua === null || ua === '')
+        ? '<i style="color:#94a3b8;">(tidak dijawab)</i>'
+        : q.type === 'short'
+          ? ua
+          : q.type === 'tf'
+            ? (ua === 0 ? 'Benar' : 'Salah')
+            : LETTERS[ua] + '. ' + q.options[ua];
+
+    const dispKey = q.type === 'short'
+        ? q.answerText
+        : q.type === 'tf'
+          ? (q.answer === 0 ? 'Benar' : 'Salah')
+          : LETTERS[q.answer] + '. ' + q.options[q.answer];
+
+    return `<details class="rev">
+      <summary>
+        <span class="mk ${ok?'mk-ok':'mk-no'}">${ok?'✓':'✕'}</span>
+        <span>${i+1}. ${q.q}</span>
+      </summary>
+      <div class="rev-body">
+        <div class="rev-line">Jawabanmu: <span class="${ok?'chip-ok':'chip-no'}">${dispUser}</span></div>
+        <div class="rev-line">Jawaban benar: <b>${dispKey}</b></div>
+        <div class="rev-line" style="color:#475569;">💡 <b>Pembahasan:</b> ${q.pembahasan}</div>
+      </div>
+    </details>`;
+  }).join('');
+
+  const clr = lulus ? '#10b981' : '#f59e0b';
+
+  $('result').innerHTML = `
+    <div class="result-card">
+      <div class="res-head">
+        <div class="score-circle" style="--p:${nilai}; --clr:${clr};">
+          <div class="score-inner">
+            <span class="score-num">${nilai}</span>
+            <span class="score-label">NILAI</span>
+          </div>
+        </div>
+        <h2 class="res-title">${lulus ? '🎉 Selamat, Kamu Tuntas!' : '💪 Semangat, Coba Lagi!'}</h2>
+        <p class="res-sub">
+          ${lulus
+            ? `Kamu telah mencapai KKM ${KKM}. Pemahamanmu tentang Lembaga Keuangan Bukan Bank sudah baik.`
+            : `Nilaimu belum mencapai KKM ${KKM}. Pelajari kembali materi pada topik yang masih lemah, lalu ulangi kuis ini.`}
+        </p>
+        <div class="status-pill ${lulus?'pill-pass':'pill-fail'}">
+          ${lulus ? '✓ TUNTAS — LANJUT KE PENGAYAAN' : '⚠ BELUM TUNTAS — JALUR PENGUASAAN'}
+        </div>
+
+        <div class="identity-result">
+          <div><b>${state.nama}</b><span>NAMA</span></div>
+          <div><b>${state.kelas}</b><span>KELAS</span></div>
+          <div><b>${state.duration} detik</b><span>DURASI</span></div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat"><b style="color:#10b981;">${state.score}</b><span>BENAR</span></div>
+          <div class="stat"><b style="color:#ef4444;">${salah}</b><span>SALAH</span></div>
+          <div class="stat"><b>${total}</b><span>TOTAL SOAL</span></div>
+        </div>
+
+        <div id="sendStatus" class="send-status send-loading">📤 Mengirim nilai ke guru…</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <h3 class="section-h">📊 Rekap Penguasaan per Topik</h3>
+      <div class="topic-list">${topikRows}</div>
+    </div>
+
+    ${lulus ? pengayaanHTML : penguasaanHTML}
+
+    <div class="result-card">
+      <h3 class="section-h">🔍 Pembahasan Lengkap 25 Soal</h3>
+      <div class="review-list">${reviewHTML}</div>
+    </div>
+
+    <button class="btn btn-primary" id="retryBtn">🔄 Ulangi Kuis</button>
+    <button class="btn btn-ghost" id="backHomeBtn">🏠 Kembali ke Beranda</button>
+    <div class="footer-note">Kuis Interaktif — Lembaga Keuangan Bukan Bank • IPS Kelas 9 • Kurikulum Merdeka</div>
+  `;
+
+  showScreen('result');
+
+  const retry = $('retryBtn');
+  if(retry) retry.addEventListener('click',()=>{
+    state.index = 0; state.score = 0;
+    state.userAnswers = []; state.results = [];
+    state.sent = false;
+    state.startTime = Date.now();
+    showScreen('quiz');
+    renderQuestion();
+  });
+
+  const back1 = $('backHomeBtn');
+  if(back1) back1.addEventListener('click',()=>showScreen('home'));
+
+  const back2 = $('backHome2');
+  if(back2) back2.addEventListener('click',()=>showScreen('home'));
+}
+</script>
+</body>
+</html>
